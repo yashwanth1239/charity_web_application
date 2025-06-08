@@ -50,7 +50,7 @@ public class WebSecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/register", "/api/login", "/api/contact").permitAll()
-                        .requestMatchers("/api/logout").authenticated() // Require authentication for logout
+                        .requestMatchers("/api/logout","/api/profile", "/api/donations/**").authenticated() // Require authentication for logout
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
