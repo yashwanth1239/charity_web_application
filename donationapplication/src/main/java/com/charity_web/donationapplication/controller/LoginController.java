@@ -1,8 +1,7 @@
 package com.charity_web.donationapplication.controller;
 
-
-
 import com.charity_web.donationapplication.dto.LoginRequest;
+import com.charity_web.donationapplication.dto.LoginResponse;
 import com.charity_web.donationapplication.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +16,17 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        String result = loginService.login(request);
-        if (result.equals("Login successful!")) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.status(401).body(result);  // Unauthorized
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        try {
+            LoginResponse response = loginService.login(request);
+            if (response.getToken() != null) {
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(401).body(response);
+            }
+        } catch (Exception e) {
+            LoginResponse errorResponse = new LoginResponse(null, null, "Login failed: " + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
         }
     }
 }
-
